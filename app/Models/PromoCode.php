@@ -14,7 +14,7 @@ class PromoCode extends Model
         'code',
         'discount_type',
         'discount',
-        'valid_unit',
+        'valid_until',
         'is_used',
     ];
 
