@@ -54,7 +54,31 @@ class FlightResource extends Resource
                         ]),
                         Forms\Components\Wizard\Step::make('Flight Class')
                         ->schema([
-                            // ...
+                            Forms\Components\Repeater::make('flight_classes')
+                        ->relationship('classes')
+                        ->schema([
+                            Forms\Components\Select::make('class_type')
+                            ->options([
+                                'business'=>'Business',
+                                'economy'=>'Economy',
+                            ])
+                            ->required(),
+                            Forms\Components\TextInput::make('price')
+                            ->required()
+                            ->prefix('IDR')
+                            ->numeric()
+                            ->minValue(0),
+                            Forms\Components\TextInput::make('total_seats')
+                            ->required()
+                            ->numeric()
+                            ->minValue(1)
+                            ->label('Total Seats'),
+                            Forms\Components\Select::make('facilities')
+                            ->relationship('facilities','name')
+                            ->multiple()
+                            ->required(),
+                        ])
+
                         ]),
                 ])->columnSpan(2)
             ]);
@@ -64,7 +88,17 @@ class FlightResource extends Resource
     {
         return $table
             ->columns([
-                //
+                Tables\Columns\TextColumn::make('flight_number'),
+                Tables\Columns\TextColumn::make('airline.name'),
+                Tables\Columns\TextColumn::make('segments')
+                    ->label('Route & Duration')
+                    ->formatStateUsing(function(Flight $record): string {
+                        $firstSegment = $record->segments->first();
+                        $lastSegment = $record->segment->last();
+                        $route = $firstSegment->airport->iata_code . ' - ' . $lastSegment->airport->iata_code;
+                        $duration = (new \DateTime($firstSegment->time))->format('d F Y H:i') . ' - ' . (new \DateTime($lastSegment->time))->format('d F Y H:i');
+                        return $route . ' | ' . $duration;
+                    }),
             ])
             ->filters([
                 //
