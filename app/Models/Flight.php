@@ -46,11 +46,11 @@ class Flight extends Model
         $classes = $this->classes;
 
         foreach ($classes as $class) {
-            $totalSeats = $class->totalSeats;
+            $totalSeats = $class->total_seats;
             $seatsPerRow = $this->getSeatsPerRow($class->class_type);
             $rows = ceil($totalSeats / $seatsPerRow);
 
-            $existingSeats = FlightSeat::where('flight_id',$this->id)
+            $existingSeats = FlightSeat::where('flight_id', $this->id)
                 ->where('class_type', $class->class_type)
                 ->get();
 
@@ -58,10 +58,10 @@ class Flight extends Model
 
             $seatCounter = 1;
 
-            for ($row = 1; $row <= $rows; $row++){
-                if (!in_array($row, $existingRows)){
-                    for ($column = 1; $column <= $seatsPerRow; $column++){
-                        if ($seatCounter > $totalSeats){
+            for ($row = 1; $row <= $rows; $row++) {
+                if (!in_array($row, $existingRows)) {
+                    for ($column = 1; $column <= $seatsPerRow; $column++) {
+                        if ($seatCounter > $totalSeats) {
                             break;
                         }
 
@@ -81,8 +81,8 @@ class Flight extends Model
                 }
             }
 
-            foreach ($existingSeats as $existingSeat){
-                if ($existingSeat->column > $seatsPerRow || $existingSeat->row > $rows){
+            foreach ($existingSeats as $existingSeat) {
+                if ($existingSeat->column > $seatsPerRow || $existingSeat->row > $rows) {
                     $existingSeat->is_available = false;
                     $existingSeat->save();
                 }
@@ -92,7 +92,7 @@ class Flight extends Model
 
     protected function getSeatsPerRow($classType)
     {
-        switch ($classType){
+        switch ($classType) {
             case 'business':
                 return 4;
             case 'economy':

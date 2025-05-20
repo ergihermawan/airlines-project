@@ -11,7 +11,7 @@ class CreateFlight extends CreateRecord
 {
     protected static string $resource = FlightResource::class;
 
-    protected function afterCreate():void
+    protected function afterCreate(): void
     {
         $flight = Flight::find($this->record->id);
 

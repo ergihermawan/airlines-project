@@ -94,7 +94,7 @@ class FlightResource extends Resource
                     ->label('Route & Duration')
                     ->formatStateUsing(function(Flight $record): string {
                         $firstSegment = $record->segments->first();
-                        $lastSegment = $record->segment->last();
+                        $lastSegment = $record->segments->last();
                         $route = $firstSegment->airport->iata_code . ' - ' . $lastSegment->airport->iata_code;
                         $duration = (new \DateTime($firstSegment->time))->format('d F Y H:i') . ' - ' . (new \DateTime($lastSegment->time))->format('d F Y H:i');
                         return $route . ' | ' . $duration;
@@ -104,7 +104,9 @@ class FlightResource extends Resource
                 //
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

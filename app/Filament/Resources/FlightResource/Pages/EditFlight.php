@@ -17,7 +17,7 @@ class EditFlight extends EditRecord
         ];
     }
 
-    protected function afterSve()
+    protected function afterSave()
     {
         $this->record->generateSeats();
     }
